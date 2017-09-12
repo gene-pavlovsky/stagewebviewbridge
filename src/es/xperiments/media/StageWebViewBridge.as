@@ -20,6 +20,7 @@ package es.xperiments.media
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Stage;
+	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.events.LocationChangeEvent;
@@ -282,6 +283,7 @@ package es.xperiments.media
 			switch( type )
 			{
 				case Event.COMPLETE:
+				case ErrorEvent.ERROR:
 				case LocationChangeEvent.LOCATION_CHANGING:
 				case LocationChangeEvent.LOCATION_CHANGE:
 				case FocusEvent.FOCUS_IN:
@@ -303,6 +305,7 @@ package es.xperiments.media
 			switch( type )
 			{
 				case Event.COMPLETE:
+				case ErrorEvent.ERROR:
 				case LocationChangeEvent.LOCATION_CHANGING:
 				case LocationChangeEvent.LOCATION_CHANGE:
 				case FocusEvent.FOCUS_IN:
