@@ -1,8 +1,8 @@
 (function(window)
 {
 	window.StageWebViewBridge = (function()
-	{         
-	/* PROPIERTIES */
+	{
+	/* PROPERTIES */
 		
 		/* Stores callBack functions */
 		var callBacks = [];
@@ -13,8 +13,8 @@
 		/* Stores the extensions parsed with the cache System */
 		var cached_extensions = [];
 		
-		/* Stores the default function called on DOMContentLoaded */ 
-		var DOMContentLoadedCallBack =function(){ return null };
+		/* Stores the default function called on DOMContentLoaded */
+		var DOMContentLoadedCallBack = function(){ return null };
 		
 		/* Stores the default function called on deviceReady */
 		var devicereadyCallBack = function(){};
@@ -37,9 +37,9 @@
 		/* Used to determine OS */
 		var checker =
 		{
-		  iphone: navigator.userAgent.match(/(iPhone|iPod|iPad)/) === null ? false:true,
-		  android: navigator.userAgent.match(/Android/) === null ? false: navigator.platform.match(/Linux/) == null ? false:true
-		};		
+		  iphone: navigator.userAgent.match(/(iPhone|iPod|iPad)/) === null ? false : true,
+		  android: navigator.userAgent.match(/Android/) === null ? false : navigator.platform.match(/Linux/) == null ? false : true
+		};
 		
 		/* Used to determine if the paths has been initialized */
 		var pathsReady = false;
@@ -55,24 +55,24 @@
 		var defaultCallDelay = 500;
 		
 		/* Used to determine the "protocol" to do the comm with AS3 */
-		var sendingProtocol = checker.iphone ? 'about:':'tuoba:';		
+		var sendingProtocol = 'http://swvb/?data=';
 
-	/* METHODS */	
+	/* METHODS */
 		
-		/* Used internally to parse call funcions from AS3 */
+		/* Used internally to parse call functions from AS3 */
 		var doCall = function( jsonArgs )
 		{
 			setTimeout(function() { deferredDoCall(jsonArgs); },0 );
 		};
-	    
-		/* Used internally to parse call funcions from AS3 */
+	
+		/* Used internally to parse call functions from AS3 */
 		var deferredDoCall = function( jsonArgs )
 		{
 			var _serializeObject = JSON.parse( atob( jsonArgs ) );
 			var method = _serializeObject.method;
 			var returnValue = true;
 			if( method.indexOf('[SWVMethod]')==-1 )
-			{			
+			{
 				var targetFunction;
 				if( method.indexOf('.')==-1)
 				{
@@ -96,9 +96,9 @@
 			};
 
 			if( _serializeObject.callBack !=undefined  )
-			{	
-				call( _serializeObject.callBack, null, returnValue );  		
-			};							
+			{
+				call( _serializeObject.callBack, null, returnValue );
+			};
 		};
 		
 		/* Used to call an AS3 function. */
@@ -123,7 +123,7 @@
 
 			_serializeObject.arguments = argumentsArray;
 			if( _serializeObject.callBack !=undefined ) { addCallback('[SWVMethod]'+arguments[ 0 ], arguments[ 1 ] ); };
-			setTimeout( function(){ window.location.href=sendingProtocol+'[SWVData]'+btoa( JSON.stringify( _serializeObject ) );},aggregatedCallDelay );			
+			setTimeout( function(){ window.location.href=sendingProtocol+btoa( JSON.stringify( _serializeObject ) );},aggregatedCallDelay );
 			
 			lastCallTime = new Date().getTime();
 			
@@ -150,9 +150,9 @@
 				throw "StageWebViewBridge.getFilePath('"+fileName+"').Paths still not set. Listen to document.deviceready event before access this method.";
 			}
 			else
-			{	
+			{
 				if( fileName.indexOf('jsfile:') !=-1 )
-				{	
+				{
 					if( fileRegex.exec(fileName) != null )
 					{
 						return rootPath+'/'+fileName.split('jsfile:/')[1];
@@ -163,7 +163,7 @@
 					};
 				};
 				if( fileName.indexOf('jsdocfile:') !=-1 )
-				{	
+				{
 					return docsPath+'/'+fileName.split('jsdocfile:/')[1];
 				};
 			}
@@ -174,7 +174,7 @@
 			var fakeEvent = document.createEvent("UIEvents");
 			fakeEvent.initEvent( name , false,false );
 			document.dispatchEvent(fakeEvent);
-		};		
+		};
 		
 		/*[Event("ready")]*/
 		var ready = function( handler )
@@ -200,7 +200,7 @@
 		
 		/* Called from AS3 on loadComplete. */
 		var onGetFilePaths = function( data )
-		{          
+		{
 			document.title = new Date().getTime();
 			sourcePath = data.sourcePath;
 			rootPath = data.rootPath;
@@ -226,7 +226,7 @@
 		
 		/* Call AS3 to fire StageWebViewBridgeEvent.DOM_LOADED */
 		var callDOMContentLoaded = function()
-		{          
+		{
 			document.removeEventListener( 'DOMContentLoaded', callDOMContentLoaded, false );
 			call( '___onDomReady', onReady,  DOMContentLoadedCallBack() );
 		};
@@ -235,7 +235,7 @@
 		var loadComplete = function()
 		{
 			document.removeEventListener('load', loadComplete, false );
-			call('___getFilePaths', onGetFilePaths );		
+			call('___getFilePaths', onGetFilePaths );
 		};
 		
 		/* Listen for page load complete */

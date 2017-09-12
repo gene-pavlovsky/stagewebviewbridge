@@ -36,7 +36,7 @@ package es.xperiments.media
 		public static const isANDROID : Boolean = Capabilities.version.indexOf( 'AND' ) != -1 ? true : false;
 		public static const isDESKTOP : Boolean = ( !isIPHONE && !isANDROID );
 
-		public static const SENDING_PROTOCOL : String = isIPHONE ?  "about:":"tuoba:";
+		public static const SENDING_PROTOCOL : String = "http://swvb/?data=";
 		public static const PROTOCOL_APP_LINK : String = "applink:/";
 		public static const PROTOCOL_DOC_LINK : String = "doclink:/";
 		
@@ -68,18 +68,18 @@ package es.xperiments.media
 
 		/**
 		 * Main init function
-		 * 
+		 *
 		 * @param stage instance
-		 * 
+		 *
 		 * @example
 		 *	<br>
-		 *	// Initialize your debug mode BEFORE!!!<br> 
-		 *	StageWebViewDisk.debugMode = true;<br><br> 
-		 *	// Initialize your aditionl extensions to preparse BEFORE!!!<br> 
-		 *	StageWebViewDisk.setSourceFileExtensions([ "html", "htm", "css", "js", "xml" ]);<br><br> 
+		 *	// Initialize your debug mode BEFORE!!!<br>
+		 *	StageWebViewDisk.debugMode = true;<br><br>
+		 *	// Initialize your aditionl extensions to preparse BEFORE!!!<br>
+		 *	StageWebViewDisk.setSourceFileExtensions([ "html", "htm", "css", "js", "xml" ]);<br><br>
 		 *	// Call init function<br>
 		 *	StageWebViewDisk.initialize( stage )<br>
-		 * 
+		 *
 		 */
 		public static function initialize( stage : Stage ) : void
 		{
@@ -121,12 +121,12 @@ package es.xperiments.media
 					/* new iOS 5.0 Data Storage Guidelines
 					 * https://developer.apple.com/icloud/documentation/data-storage/
 					 * https://developer.apple.com/library/ios/#qa/qa1719/_index.html
-					 */					
+					 */
 					_applicationTempDir = new File(File.applicationDirectory.nativePath +"/\.\./tmp");
 					
 					// To acomplish the Apple  Data Storage Guidelines Rules delete our TMP files dir at exit
 					NativeApplication.nativeApplication.addEventListener(Event.EXITING, deleteTempFolder,false,0,true );
-					NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, deleteTempFolder, false, 0, true);					
+					NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, deleteTempFolder, false, 0, true);
 					
 					break;
 				// DESKTOP
@@ -134,11 +134,11 @@ package es.xperiments.media
 					_appCacheFile = _debugMode ? new File( new File( "app:/" ).nativePath ) : File.applicationStorageDirectory;
 					_applicationCacheDirectory = _appCacheFile.url;
 					_applicationRootPath = _applicationCacheDirectory + '/' + getWorkingDir();
-					_applicationSourcesDirectory =  _debugMode ? _applicationRootPath:new File( new File( "app:/" + _document_root ).nativePath ).url;
+					_applicationSourcesDirectory =  _debugMode ? _applicationRootPath : new File( new File( "app:/" + _document_root ).nativePath ).url;
 					_appDocsDirectory = File.documentsDirectory.url;
 					_applicationTempDir = _appCacheFile.resolvePath( 'SWVBTmp' );
-					NativeApplication.nativeApplication.addEventListener(Event.EXITING, deleteTempFolder,false,0,true );
-					NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, deleteTempFolder, false, 0, true);														
+					NativeApplication.nativeApplication.addEventListener(Event.EXITING, deleteTempFolder, false, 0, true);
+					NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, deleteTempFolder, false, 0, true);
 					break;
 			}
 
@@ -213,9 +213,9 @@ package es.xperiments.media
 		}
 
 		/**
-		 * Sets the file extensions that must be preparsed into cache 
+		 * Sets the file extensions that must be preparsed into cache
 		 * @param extensions Array of extensions ex.:["html","htm","css","js"]
-		 * 
+		 *
 		 */
 		public static function setExtensionsToProcess( extensions : Array ) : void
 		{
@@ -281,7 +281,7 @@ package es.xperiments.media
 					return File.documentsDirectory.resolvePath( fileName ).nativePath;
 					break;
 				default:
-					throw new Error( "StageWebViewDisk.getFilePath( url ) :: You mus provide a valid protocol applink:/ or doclink:/" );
+					throw new Error( "StageWebViewDisk.getFilePath( url ) :: You must provide a valid protocol applink:/ or doclink:/" );
 					break;
 			}
 		}
@@ -367,7 +367,7 @@ package es.xperiments.media
 			}
 		}
 
-		/** 
+		/**
 		 * Parses the original files.
 		 * This function executes once at app instalation or in DebugMode.
 		 */
@@ -427,7 +427,7 @@ package es.xperiments.media
 		 * Parses a file contents.
 		 * Injects the JS code into the local files.
 		 * Replaces the appfile:/ protocol width the real path on disc
-		 * 
+		 *
 		 * @param file File to parse
 		 */
 		private static function preparseFile( file : File ) : void
@@ -451,10 +451,10 @@ package es.xperiments.media
 		}
 
 		/**
-		 * Recursively get a directory structure 
+		 * Recursively get a directory structure
 		 * @param fileList Destination vector file
 		 * @param path Current path to process
-		 * 
+		 *
 		 */
 		private static function getFilesRecursive( fileList : Vector.<File>, path : String = "" ) : void
 		{

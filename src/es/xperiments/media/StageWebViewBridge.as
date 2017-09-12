@@ -29,35 +29,35 @@ package es.xperiments.media
 	import flash.media.StageWebView;
 	import flash.system.System;
 
-	/** 
-	 * @eventType es.xperiments.media.StageWebviewDiskEvent.START_DISK_PARSING 
+	/**
+	 * @eventType es.xperiments.media.StageWebviewDiskEvent.START_DISK_PARSING
 	 */
 	[Event(name="START_DISK_PARSING", type="es.xperiments.media.StageWebviewDiskEvent")]
-	/** 
-	 * @eventType es.xperiments.media.StageWebviewDiskEvent.END_DISK_PARSING 
+	/**
+	 * @eventType es.xperiments.media.StageWebviewDiskEvent.END_DISK_PARSING
 	 */
 	[Event(name="END_DISK_PARSING", type="es.xperiments.media.StageWebviewDiskEvent")]
-	/** 
-	 * @eventType es.xperiments.media.StageWebViewBridgeEvent.DEVICE_READY 
+	/**
+	 * @eventType es.xperiments.media.StageWebViewBridgeEvent.DEVICE_READY
 	 */
 	[Event(name="DEVICE_READY", type="es.xperiments.media.StageWebViewBridgeEvent")]
-	/** 
-	 * @eventType es.xperiments.media.StageWebViewBridgeEvent.DOM_LOADED 
+	/**
+	 * @eventType es.xperiments.media.StageWebViewBridgeEvent.DOM_LOADED
 	 */
 	[Event(name="DOM_LOADED", type="es.xperiments.media.StageWebViewBridgeEvent")]
-	/** 
-	 * @eventType es.xperiments.media.StageWebViewBridgeEvent.ON_GET_SNAPSHOT 
+	/**
+	 * @eventType es.xperiments.media.StageWebViewBridgeEvent.ON_GET_SNAPSHOT
 	 */
 	[Event(name="ON_GET_SNAPSHOT", type="es.xperiments.media.StageWebViewBridgeEvent")]
 	/**
-	 * 	Signals that the last load operation requested by loadString() , loadLocalString(), loadURL() , loadLocalURL() method has completed. 
-	 * @eventType flash.events.Event.COMPLETE 
+	 * 	Signals that the last load operation requested by loadString() , loadLocalString(), loadURL() , loadLocalURL() method has completed.
+	 * @eventType flash.events.Event.COMPLETE
 	 */
 	[Event(name="complete", type="flash.events.Event")]
 	
 	
 	public class StageWebViewBridge extends Bitmap
-	{ 
+	{
 		private static const _zeroPoint : Point = new Point( 0, 0 );
 		private var _translatedPoint : Point;
 		private var _bridge : StageWebViewBridgeExternal;
@@ -74,7 +74,8 @@ package es.xperiments.media
 		 * @param ypos Indicates the initial y pos
 		 * @param w Indicates the initial width
 		 * @param h Indicates the initial height
-		 * @param _autoUpdateProps Boolean. Control visibility and position of his parents. TRUE by Default. Disable it to save some CPU ( as it uses an EXIT_FRAME event listener to work ),then control yourself his props. 
+		 * @param autoUpdateProps Control visibility and position of his parents. Disable it to save some CPU ( as it uses an EXIT_FRAME event listener to work ),then control yourself his props.
+		 * @param useNative When useNative is false, a version of WebKit embedded within AIR is used as the source of the StageWebView created. When useNative is true, then AIR will use the the system's default web engine. Mobile platforms only support using the system web engine, so useNative is ignored on mobile platforms.
 		 * @example The following code creates a new StageWebViewInstance
 		 * <listing version="3.0">
 		 *	import es.xperiments.media.StageWebViewDisk;
@@ -83,53 +84,53 @@ package es.xperiments.media
 		 *	import es.xperiments.media.StageWebViewBridgeEvent;
 		 *	import flash.events.Event;
 		 *	import flash.events.MouseEvent;
-		 *	
+		 *
 		 *	// this is our main view
 		 *	var view:StageWebViewBridge;
-		 *	
-		 *	
+		 *
+		 *
 		 *	// init the disk filesystem
 		 *	StageWebViewDisk.addEventListener( StageWebviewDiskEvent.END_DISK_PARSING, onInit );
 		 *	StageWebViewDisk.setDebugMode( true );
 		 *	StageWebViewDisk.initialize( stage );
-		 *	
-		 *	// Fired when StageWebviewDiskEvent cache process finish 
+		 *
+		 *	// Fired when StageWebviewDiskEvent cache process finish
 		 *	function onInit( e:StageWebviewDiskEvent ):void
 		 *	{
-		 *		trace( 'END_DISK_PARSING');	
-		 *		
+		 *		trace( 'END_DISK_PARSING');
+		 *
 		 *		// create the view
 		 *		view = new StageWebViewBridge( 0,0, 320,240 );
-		 *		
+		 *
 		 *		// listen StageWebViewBridgeEvent.DEVICE_READY event to be sure the communication is ok
 		 *		view.addEventListener(StageWebViewBridgeEvent.DEVICE_READY, onDeviceReady );
-		 *	
-		 *		
+		 *
+		 *
 		 *		// load the localfile demo.html ( inside the www dir )
 		 *		view.loadURL('http://www.google.com');
-		 *	
+		 *
 		 *	}
-		 *	
+		 *
 		 *	function onDeviceReady( e:Event ):void
 		 *	{
 		 *		output.appendText('onDeviceReady\n');
 		 *		// all is loaded and ok, show the view
 		 *		addChild( view );
 		 *	}
-		 * </listing>  
-		 * 
+		 * </listing>
+		 *
 		 */
-		public function StageWebViewBridge( xpos : uint = 0, ypos : uint = 0, w : uint = 400, h : uint = 400, autoUpdateProps : Boolean = true )
+		public function StageWebViewBridge( xpos : uint = 0, ypos : uint = 0, w : uint = 400, h : uint = 400, autoUpdateProps : Boolean = true, useNative : Boolean = false )
 		{
 			super();
 			_autoUpdateProps = autoUpdateProps;
 			_viewPort = new Rectangle( 0, 0, w, h );
-			_view = new StageWebView();
+			_view = new StageWebView(useNative);
 			_view.viewPort = _viewPort;
 
-			/** 
+			/**
 			 * Workarround to iOS Bug that crashes
-			 * the app when a load method starts and the 
+			 * the app when a load method starts and the
 			 * view.stage is not declared
 			 */
 			if ( StageWebViewDisk.isIPHONE )
@@ -199,7 +200,7 @@ package es.xperiments.media
 
 		/**
 		 * Fires when the bitmap is removed from stage
-		 * Used to remove the autoVisibleUpdate feature  
+		 * Used to remove the autoVisibleUpdate feature
 		 */
 		private function onRemoved( event : Event ) : void
 		{
@@ -239,11 +240,11 @@ package es.xperiments.media
 				_view.stage = null;
 			}
 	
-			//updatePosition();	
+			//updatePosition();
 		}
 
 		/**
-		 * Controls LOCATION_CHANGING events for catching incomming data.
+		 * Controls LOCATION_CHANGING events for catching incoming data.
 		 */
 		private function onLocationChange( e : Event ) : void
 		{
@@ -254,9 +255,9 @@ package es.xperiments.media
 					switch( true )
 					{
 						// javascript calls actionscript
-						case currLocation.indexOf( StageWebViewDisk.SENDING_PROTOCOL + '[SWVData]' ) != -1:
+						case currLocation.indexOf( StageWebViewDisk.SENDING_PROTOCOL ) != -1:
 							e.preventDefault();
-							_bridge.parseCallBack( currLocation.split( StageWebViewDisk.SENDING_PROTOCOL + '[SWVData]' )[1] );
+							_bridge.parseCallBack( currLocation.split( StageWebViewDisk.SENDING_PROTOCOL )[1] );
 							break;
 						// load local pages
 						case currLocation.indexOf( 'applink:' ) != -1:
@@ -274,7 +275,7 @@ package es.xperiments.media
 
 		/**
 		 * Overrides default addEventListener behavior to proxy LOCATION_CHANGING events through the original StageWebView
-		 * This lets us to prevent the LOCATION_CHANGING event 
+		 * This lets us to prevent the LOCATION_CHANGING event
 		 */
 		override public function addEventListener( type : String, listener : Function, useCapture : Boolean = false, priority : int = 0, useWeakReference : Boolean = false ) : void
 		{
@@ -295,7 +296,7 @@ package es.xperiments.media
 
 		/**
 		 * Overrides default removeEventListener behavior to proxy LOCATION_CHANGING events through the original StageWebView
-		 * This lets us to prevent the LOCATION_CHANGING event 
+		 * This lets us to prevent the LOCATION_CHANGING event
 		 */
 		override public function removeEventListener( type : String, listener : Function, useCapture : Boolean = false ) : void
 		{
@@ -373,7 +374,7 @@ package es.xperiments.media
 		}
 
 		/**
-		 * Frees memory that is used to store the StageWebViewBridge object. 
+		 * Frees memory that is used to store the StageWebViewBridge object.
 		 * All subsequent calls to methods or properties of this StageWebViewBridge instance fail, and an exception is thrown.
 		 */
 		public function dispose() : void
@@ -411,15 +412,15 @@ package es.xperiments.media
 
 		/**
 		 * Loads a local htmlFile into the webview.
-		 * 
+		 *
 		 * To link files in html use the "applink:/" protocol:
 		 * <a href="applink:/index.html">index</a>
-		 * 
+		 *
 		 * For images,css,scripts... etc, use the "appfile:/" protocol:
 		 * <img src="appfile:/image.png"/>
-		 * 
+		 *
 		 * @param url	The url file with applink:/ protocol
-		 * @param initJavascript Enables / Disables Javascript init at page load complete.				
+		 * @param initJavascript Enables / Disables Javascript init at page load complete.
 		 * 				Usage: stageWebViewBridge.loadLocalURL('applink:/index.html');
 		 */
 		public function loadLocalURL( url : String ) : void
@@ -438,7 +439,7 @@ package es.xperiments.media
 
 		/**
 		 * Enhaced loadString
-		 * Loads a string and inject the javascript comunication code into it. 
+		 * Loads a string and inject the javascript comunication code into it.
 		 * @param text String to load
 		 */
 		public function loadString( text : String, mimeType : String = "text/html" ) : void
@@ -453,7 +454,7 @@ package es.xperiments.media
 		/**
 		 * Creates and loads a temporally file with the provided contents.
 		 * This way we can access local files with the appfile:/ protocol
-		 * @params String content
+		 * @param String content
 		 */
 		public function loadLocalString( content : String ) : void
 		{
@@ -624,8 +625,8 @@ package es.xperiments.media
 
 		/**
 		 * Add a callback function to the current list of avaliable callbacks
-		 * @param name the name of the callback function in this format : [SWVMethod]( name )
-		 * @param callback The callback function 
+		 * @param name the name of the callback function
+		 * @param callback The callback function
 		 */
 		public function addCallback( name : String, callback : Function ) : void
 		{

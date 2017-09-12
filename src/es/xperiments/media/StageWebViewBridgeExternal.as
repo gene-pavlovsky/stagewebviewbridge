@@ -27,13 +27,13 @@ package es.xperiments.media
 	public class StageWebViewBridgeExternal extends EventDispatcher
 	{
 		private var _view:StageWebViewBridge;
-		private var _serializeObject:Object; 
+		private var _serializeObject:Object;
 		private var _callBacks:Array;
 		private var _callBackFunction:Function;
 		
 		/**
 		 * Contructor
-		 * @param stageWebView The stagewebview instance 
+		 * @param stageWebView The stagewebview instance
 		 */
 		public function StageWebViewBridgeExternal( stageWebView : StageWebViewBridge )
 		{
@@ -49,26 +49,26 @@ package es.xperiments.media
 		 */
 		internal function call(functionName:String, callback:Function = null,  ... arguments):void
 		{
-			_serializeObject = {};  
+			_serializeObject = {};
 			_serializeObject['method'] = functionName;
 			_serializeObject['arguments'] = arguments;
 			if( callback!=null )
 			{
 				addCallback('[SWVMethod]'+functionName, callback );
 				_serializeObject['callBack'] = '[SWVMethod]'+functionName;
-			}	
+			}
 			_view.loadURL("javascript:StageWebViewBridge.doCall('"+Base64.encodeString( JSON.stringify( _serializeObject ) ) +"')");
 		}
 
 		/**
 		 * Add a callback function to the current list of avaliable callbacks
-		 * @param name the name of the callback function in this format : [SWVMethod]( name )
-		 * @param callback The callback function 
+		 * @param name the name of the callback function
+		 * @param callback The callback function
 		 */
 		internal function addCallback( name:String, callback:Function ):void
 		{
 			_callBacks[ name ] = callback;
-		}	
+		}
 
 
 		/**
@@ -79,7 +79,7 @@ package es.xperiments.media
 		internal function parseCallBack( base64String:String ):void
 		{
 			_serializeObject = JSON.parse( Base64.decode( base64String ).toString() );
-			trace( '_serializeObject =>'+_serializeObject['method']);
+			//trace( '_serializeObject => '+_serializeObject['method']);
 			_callBackFunction = _callBacks[ _serializeObject['method'] ];
 			var returnValue:* = null;
 
@@ -94,7 +94,7 @@ package es.xperiments.media
 			if(_serializeObject['callBack']!=undefined && returnValue!=null )
 			{
 				call( _serializeObject['callBack'], null, returnValue );
-			}	
-		}	
+			}
+		}
 	}
 }
